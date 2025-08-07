@@ -1,0 +1,253 @@
+local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Humanoid = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")
+local Window = Rayfield:CreateWindow({
+    Name = "Txzall (L Script UH I MEAN W Script)",
+    LoadingTitle = "🤪🤪🤪",
+    LoadingSubtitle = "by Humanoid...",
+    ConfigurationSaving = {Enabled = false}
+})
+-- MISC TAB
+local MiscTab = Window:CreateTab("MISC", 4483362458)
+MiscTab:CreateSection("Misc GUI / Script")
+-- Infinite Jump
+MiscTab:CreateToggle({
+    Name = "Infinite Jump",
+    CurrentValue = false,
+    Callback = function(Value)
+        getgenv().infjump = Value
+        if Value then
+            game:GetService("UserInputService").JumpRequest:Connect(function()
+                if infjump then
+                    LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
+                end
+            end)
+        end
+    end
+})
+-- WalkSpeed
+local wsEnabled = false
+local wsValue = 16
+MiscTab:CreateToggle({
+    Name = "Walk Speed",
+    CurrentValue = false,
+    Callback = function(Value)
+        wsEnabled = Value
+        if not Value then
+            if Humanoid then Humanoid.WalkSpeed = 16 end
+        end
+    end
+})
+MiscTab:CreateSlider({
+    Name = "Walk Speed Amount",
+    Range = {16,100},
+    Increment = 1,
+    CurrentValue = 16,
+    Callback = function(Value)
+        wsValue = Value
+    end
+})
+game:GetService("RunService").Heartbeat:Connect(function()
+    if wsEnabled and Humanoid then
+        Humanoid.WalkSpeed = wsValue
+    end
+end)
+-- Jump Power
+local jpEnabled = false
+local jpValue = 50
+MiscTab:CreateToggle({
+    Name = "Jump Power",
+    CurrentValue = false,
+    Callback = function(Value)
+        jpEnabled = Value
+        if not Value then
+            if Humanoid then Humanoid.JumpPower = 50 end
+        end
+    end
+})
+MiscTab:CreateSlider({
+    Name = "Jump Power Amount",
+    Range = {50,200},
+    Increment = 5,
+    CurrentValue = 50,
+    Callback = function(Value)
+        jpValue = Value
+    end
+})
+game:GetService("RunService").Heartbeat:Connect(function()
+    if jpEnabled and Humanoid then
+        Humanoid.JumpPower = jpValue
+    end
+end)
+-- Noclip
+MiscTab:CreateToggle({
+    Name = "Noclip",
+    CurrentValue = false,
+    Callback = function(Value)
+        getgenv().noclip = Value
+        game:GetService("RunService").Stepped:Connect(function()
+            if getgenv().noclip and LocalPlayer.Character then
+                for _, v in pairs(LocalPlayer.Character:GetDescendants()) do
+                    if v:IsA("BasePart") then
+                        v.CanCollide = false
+                    end
+                end
+            end
+        end)
+    end
+})
+-- Infinite Yield
+MiscTab:CreateButton({
+    Name = "Infinite Yield Script",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+    end
+})
+-- Fly
+local flyEnabled = false
+local flySpeed = 50
+local bodyGyro, bodyVelocity
+MiscTab:CreateToggle({
+    Name = "Fly (It's Risky Not Reccomend)",
+    CurrentValue = false,
+    Callback = function(Value)
+        flyEnabled = Value
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local hrp = char:WaitForChild("HumanoidRootPart")
+        if Value then
+            bodyGyro = Instance.new("BodyGyro", hrp)
+            bodyGyro.P = 9e4
+            bodyGyro.MaxTorque = Vector3.new(9e9,9e9,9e9)
+            bodyGyro.CFrame = hrp.CFrame
+            bodyVelocity = Instance.new("BodyVelocity", hrp)
+            bodyVelocity.Velocity = Vector3.new(0,0,0)
+            bodyVelocity.MaxForce = Vector3.new(9e9,9e9,9e9)
+            game:GetService("RunService").Heartbeat:Connect(function()
+                if flyEnabled and bodyVelocity and bodyGyro then
+                    local camCF = workspace.CurrentCamera.CFrame
+                    bodyGyro.CFrame = camCF
+                    bodyVelocity.Velocity = camCF.LookVector * flySpeed
+                elseif bodyVelocity and bodyGyro then
+                    bodyVelocity.Velocity = Vector3.new(0,0,0)
+                end
+            end)
+        else
+            if bodyGyro then bodyGyro:Destroy() end
+            if bodyVelocity then bodyVelocity:Destroy() end
+        end
+    end
+})
+MiscTab:CreateSlider({
+    Name = "Fly Speed",
+    Range = {10,200},
+    Increment = 5,
+    CurrentValue = 50,
+    Callback = function(Value)
+        flySpeed = Value
+    end
+})
+-- FYI TAB
+local InfoTab = Window:CreateTab("FYI", 4483362458)
+InfoTab:CreateParagraph({
+    Title = "INFORMATION!",
+    Content = "THIS SCRIPT DON'T HAVE A KEY BUT THE OTHER HUB HAVE KEY I GUEST"
+})
+local OtherTab = Window:CreateTab("Other", 4483362458)
+OtherTab:CreateSection("Other GUI / Script")
+
+OtherTab:CreateButton({
+    Name = "👾 Omg Hub",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Omgshit/Scripts/main/MainLoader.lua"))()
+    end
+})
+
+OtherTab:CreateButton({
+    Name = "☠️ Rips Hub",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/CasperFlyModz/discord.gg-rips/main/Loader.lua"))()
+    end
+})
+
+OtherTab:CreateButton({
+    Name = "🌹Nat Hub", 
+   Callback = function() 
+        loadstring(game:HttpGet("https://get.nathub.xyz/loader"))()
+   end
+}) 
+OtherTab:CreateButton({
+    Name = "😎Tora Isme", 
+    Callback = function() 
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/Dandy"))()
+  end
+}) 
+OtherTab:CreateButton({
+   Name = "🥶Redz Hub", 
+   Callback = function() 
+local Settings = {
+    JoinTeam = "Pirates"; -- Pirates / Marines
+    Translator = true;   -- true / false
+}
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/tlredz/Scripts/refs/heads/main/main.luau"))(Settings)
+  end
+})
+OtherTab:CreateButton({
+    Name = "🤖 No lag Hub", 
+    Callback = function() 
+      loadstring(game:HttpGet("https://raw.githubusercontent.com/NoLag-id/No-Lag-HUB/refs/heads/main/Loader/Main.lua"))()
+  end
+ }) 
+OtherTab:CreateButton({
+    Name = "⚡Speed Hub", 
+    Callback = function() 
+      loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua", true))()
+  end
+}) 
+OtherTab:CreateButton({
+   Name = "❌ H4X", 
+   Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/H4xScripts/Loader/refs/heads/main/loader.lua", true))()
+ end
+}) 
+-- HTTSW Tab
+local HTTSWTab = Window:CreateTab("HTTSW", 4483362458)
+HTTSWTab:CreateParagraph({
+   Title = "How To That's Script Work?", 
+   Content = "Well Script It can only be executed in certain games XD"
+}) 
+-- Supported Game Tab
+local SupportedTab = Window:CreateTab("Supported Game", 4483362458) 
+SupportedTab:CreateParagraph({
+   Title = "Omg Hub",
+   Content = "• Fruit Seas • Anime Mania • Z Piece • FitPiece • SecondPiece • DungeonHeroes •CatPiece • Steal A Brainrot • Anime Last Stand • All Star Tower Defense X • Cat Piece • Grow A Garden • Sorcerer Battle • Anime Rails • Meme Sea • Rock Fruit • Blox Fruit • One Fruit Simulator • Blue Lock Rivals • King Legacy • Verse Piece • Arcane Piece • BubbleGum Simulator Infinity"
+}) 
+SupportedTab:CreateParagraph({
+  Title = "Rips Hub", 
+  Content = "• Become A Plane And Fly • Horse Race • GEF • Glass Bridge • 1.000.000 Glass Bridge • Sandwich Restaurant Tycoon • Pizzeria Tycoon • Burgeria Tycoon • My Little Pony Tycoon • Mega  Princess Tycoon • Youtuber Tycoon • Sell Water To Rule The Worlds • Reborn As Swordsman • Merge Simulator • Merge Toy • Squid Game • Squid Game 2 • Squid Game X • Squid Game Season 2 • Mingle • Shrimp Game • Red Light Green Light • Light Game • Squid Project"
+}) 
+SupportedTab:CreateParagraph({
+ Title = "Nat Hub", 
+ Content = "• Fisch (Well It's Need Update) • Grow A Garden • Steal A Brainrot • Blue Lock • Blade Ball • Blox Fruit • Dead Rails • Attack On Titan Revolution • Forsaken • 99 Night In The Forest"
+ }) 
+SupportedTab:CreateParagraph({
+ Title = "Tora Isme", 
+  Content = "It's Only Dandy World And That's needed Key"
+ }) 
+ SupportedTab:CreateParagraph({
+ Title = "No Lag Hub", 
+  Content = "• Grow A Garden • 99 Night In The Forest"
+}) 
+ SupportedTab:CreateParagraph({
+ Title = "Speed Hub", 
+  Content = "• The Strongest Battleground • Grow A Garden • 99 Night In The Forest • Pets Go • Muscle Legend • Dig • Ink Game • Blox Fruit (Need Update But Still Working) • Fisch (Same As Blox Fruit)"
+})
+ SupportedTab:CreateParagraph({
+ Title =  "H4X Script", 
+  Content = "• Grow A Garden (Need Update But Still Working) • 99 Night In The Forest (BEST EVER I SEEN) • Brainrot Evolution • Catch And Feed A Brainrot • Dungeon Heroes •Dig To Earth Core • FRONTLINE •  Find The Aura • Kamekameha Simulator • Raise A Farm • Merge For Diamond"
+}) 
+SupportedTab:CreateParagraph({
+ Title = "Why My Loadstring Before Not Work? ", 
+ Content = "Totally My Pastebin Account Before Is Gone Idk Why 💔"
+}) 
