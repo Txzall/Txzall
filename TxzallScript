@@ -1,253 +1,876 @@
-local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local Humanoid = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")
-local Window = Rayfield:CreateWindow({
-    Name = "Txzall (L Script UH I MEAN W Script)",
-    LoadingTitle = "🤪🤪🤪",
-    LoadingSubtitle = "by Humanoid...",
-    ConfigurationSaving = {Enabled = false}
+--[[
+ DON'T STOLE OR SOMETHING ELSE 
+ BUT YEAH IF U NEED THESE GIVE THE CREDITS 
+ OR INSPIRED WHO YEAH? 
+]]
+
+ local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+
+local Window = WindUI:CreateWindow({
+    Title = "OPEN GUI",
+    Icon = "hamburger",
+    Author = "by Txzall/zall I MADE IT ALONE NOO",
+    Folder = "Txzall",
+    
+    Size = UDim2.fromOffset(545,430),
+    Transparent = false,
+    Theme = "Midnight",
+    Resizable = true,
+    SideBarWidth = 200,
+    BackgroundImageTransparency = 0.42,
+    HideSearchBar = false,
+    ScrollBarEnabled = false,
+    User = {
+        Enabled = true,
+        Anonymous = false,
+        Callback = function()
+            print("WHY ARE U CLICK THIS D*MB")
+        end,
+    },
+    KeySystem = { 
+        Key = { "JAMAL","GOAT","WTH","ROTIBOHAY","FAJRINONONO"}, 
+        Note = "There The Key: JAMAL, GOAT, WTH, ROTIBOHAY, FAJRINONONO. CHOOSE 1 DONT USE IT ALL MAN",
+        Thumbnail = {
+            Image = "rbxassetid://90747673963553",
+            Title = "WELCOME!",
+        },
+        URL = "",
+        SaveKey = true,
+    },
 })
--- MISC TAB
-local MiscTab = Window:CreateTab("MISC", 4483362458)
-MiscTab:CreateSection("Misc GUI / Script")
--- Infinite Jump
-MiscTab:CreateToggle({
-    Name = "Infinite Jump",
-    CurrentValue = false,
-    Callback = function(Value)
-        getgenv().infjump = Value
-        if Value then
-            game:GetService("UserInputService").JumpRequest:Connect(function()
-                if infjump then
-                    LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
+
+---------------------------------------------------
+-- INFORMATION TAB
+---------------------------------------------------
+
+local infoTab = Window:Tab({
+    Title = "Information",
+    Icon = "info",
+    Locked = false,
+})
+
+local aboutSection = infoTab:Section({ 
+    Title = "About Txzall/Zall...",
+    TextXAlignment = "Left",
+    TextSize = 17,
+})
+aboutSection:Paragraph({
+    Title = "This Script is inspired by isnahamzah Lol (skrip ini terinspirasi oleh isnahamzah wkwkwk)",
+    Description = "I MADE IT ALONE SO MAYBE SOME BUTTON ARE BUGGED SADLY",
+    Color = "White",
+    Image = "",
+    ImageSize = 30,
+    Locked = false,
+    Buttons = {
+        {
+            Icon = "accessibility",
+            Title = "Info about My Script hub! (CHECK CONSOLE)",
+            Callback = function() print("GOT TRICKED? WOW NAH IT'S NOT A TRICK I JUST TIRED TO CODING ALL THESE CODE HELP") end,
+        }
+    }
+})
+
+---------------------------------------------------
+-- UNIVERSAL SCRIPTS TAB
+---------------------------------------------------
+local universalTab = Window:Tab({
+    Title = "Universal Scripts and Stuff",
+    Icon = "terminal",
+    Locked = false,
+})
+
+-- All universal controls and scripts are now in a single section.
+local scriptsSection = universalTab:Section({
+    Title = "Universal Scripts and GUIs",
+    Icon = "",
+    Opened = true,
+})
+
+---------------------------------------------------
+-- UI Elements: Toggles, Sliders, and Inputs
+---------------------------------------------------
+
+-- Noclip Toggle (Safe with respawn re-enable)
+local noclipConnection
+local reEnableNoclip = false
+
+scriptsSection:Toggle({
+    Title = "Noclip Toggle",
+    Desc = "Turns noclip on and off (auto re-enable on respawn)",
+    Default = false,
+    Callback = function(state)
+        local player = game.Players.LocalPlayer
+        local character = player.Character
+        if not character then return end
+        
+        -- Save state biar kalau respawn tetep nyala
+        reEnableNoclip = state
+
+        if state then
+            noclipConnection = game:GetService("RunService").Stepped:Connect(function()
+                for _, part in ipairs(character:GetChildren()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = false
+                    end
                 end
             end)
-        end
-    end
-})
--- WalkSpeed
-local wsEnabled = false
-local wsValue = 16
-MiscTab:CreateToggle({
-    Name = "Walk Speed",
-    CurrentValue = false,
-    Callback = function(Value)
-        wsEnabled = Value
-        if not Value then
-            if Humanoid then Humanoid.WalkSpeed = 16 end
-        end
-    end
-})
-MiscTab:CreateSlider({
-    Name = "Walk Speed Amount",
-    Range = {16,100},
-    Increment = 1,
-    CurrentValue = 16,
-    Callback = function(Value)
-        wsValue = Value
-    end
-})
-game:GetService("RunService").Heartbeat:Connect(function()
-    if wsEnabled and Humanoid then
-        Humanoid.WalkSpeed = wsValue
-    end
-end)
--- Jump Power
-local jpEnabled = false
-local jpValue = 50
-MiscTab:CreateToggle({
-    Name = "Jump Power",
-    CurrentValue = false,
-    Callback = function(Value)
-        jpEnabled = Value
-        if not Value then
-            if Humanoid then Humanoid.JumpPower = 50 end
-        end
-    end
-})
-MiscTab:CreateSlider({
-    Name = "Jump Power Amount",
-    Range = {50,200},
-    Increment = 5,
-    CurrentValue = 50,
-    Callback = function(Value)
-        jpValue = Value
-    end
-})
-game:GetService("RunService").Heartbeat:Connect(function()
-    if jpEnabled and Humanoid then
-        Humanoid.JumpPower = jpValue
-    end
-end)
--- Noclip
-MiscTab:CreateToggle({
-    Name = "Noclip",
-    CurrentValue = false,
-    Callback = function(Value)
-        getgenv().noclip = Value
-        game:GetService("RunService").Stepped:Connect(function()
-            if getgenv().noclip and LocalPlayer.Character then
-                for _, v in pairs(LocalPlayer.Character:GetDescendants()) do
-                    if v:IsA("BasePart") then
-                        v.CanCollide = false
+        else
+            if noclipConnection then
+                noclipConnection:Disconnect()
+                noclipConnection = nil
+                for _, part in ipairs(character:GetChildren()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = true
                     end
+                end
+            end
+        end
+    end
+})
+
+-- Auto apply noclip again if respawn
+game.Players.LocalPlayer.CharacterAdded:Connect(function(char)
+    if reEnableNoclip then
+        task.wait(1) -- biar character kebentuk dulu
+        noclipConnection = game:GetService("RunService").Stepped:Connect(function()
+            for _, part in ipairs(char:GetChildren()) do
+                if part:IsA("BasePart") then
+                    part.CanCollide = false
                 end
             end
         end)
     end
-})
--- Infinite Yield
-MiscTab:CreateButton({
-    Name = "Infinite Yield Script",
+end)
+
+-- ✅ Infinite Yield Button Added
+scriptsSection:Button({
+    Title = "Infinite Yield",
+    Desc = "Admin Commands Hub",
+    Locked = false,
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
     end
 })
--- Fly
-local flyEnabled = false
-local flySpeed = 50
-local bodyGyro, bodyVelocity
-MiscTab:CreateToggle({
-    Name = "Fly (It's Risky Not Reccomend)",
-    CurrentValue = false,
-    Callback = function(Value)
-        flyEnabled = Value
-        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-        local hrp = char:WaitForChild("HumanoidRootPart")
-        if Value then
-            bodyGyro = Instance.new("BodyGyro", hrp)
-            bodyGyro.P = 9e4
-            bodyGyro.MaxTorque = Vector3.new(9e9,9e9,9e9)
-            bodyGyro.CFrame = hrp.CFrame
-            bodyVelocity = Instance.new("BodyVelocity", hrp)
-            bodyVelocity.Velocity = Vector3.new(0,0,0)
-            bodyVelocity.MaxForce = Vector3.new(9e9,9e9,9e9)
-            game:GetService("RunService").Heartbeat:Connect(function()
-                if flyEnabled and bodyVelocity and bodyGyro then
-                    local camCF = workspace.CurrentCamera.CFrame
-                    bodyGyro.CFrame = camCF
-                    bodyVelocity.Velocity = camCF.LookVector * flySpeed
-                elseif bodyVelocity and bodyGyro then
-                    bodyVelocity.Velocity = Vector3.new(0,0,0)
-                end
-            end)
-        else
-            if bodyGyro then bodyGyro:Destroy() end
-            if bodyVelocity then bodyVelocity:Destroy() end
-        end
-    end
-})
-MiscTab:CreateSlider({
-    Name = "Fly Speed",
-    Range = {10,200},
-    Increment = 5,
-    CurrentValue = 50,
-    Callback = function(Value)
-        flySpeed = Value
-    end
-})
--- FYI TAB
-local InfoTab = Window:CreateTab("FYI", 4483362458)
-InfoTab:CreateParagraph({
-    Title = "INFORMATION!",
-    Content = "THIS SCRIPT DON'T HAVE A KEY BUT THE OTHER HUB HAVE KEY I GUEST"
-})
-local OtherTab = Window:CreateTab("Other", 4483362458)
-OtherTab:CreateSection("Other GUI / Script")
 
-OtherTab:CreateButton({
-    Name = "👾 Omg Hub",
+-- Panel
+scriptsSection:Button({
+    Title = " Txzall Panel",
+    Desc = "This Is For A Normal Game Like Something else But Not Req For Dandy World And Forsaken",
+    Locked = false,
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Omgshit/Scripts/main/MainLoader.lua"))()
+        loadstring(game:HttpGet("https://pastebin.com/raw/BBEwM6id"))()
     end
 })
-
-OtherTab:CreateButton({
-    Name = "☠️ Rips Hub",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/CasperFlyModz/discord.gg-rips/main/Loader.lua"))()
-    end
+-------------------------------------------------------
+-- 99 NIGHT IN THE FOREST TAB
+-------------------------------------------------------
+local NITF99Tab = Window:Tab({
+  Title = "99 NIFT SCRIPT", 
+  Icon = "moon", 
+  Locked = false, 
 })
 
-OtherTab:CreateButton({
-    Name = "🌹Nat Hub", 
+local scriptsSection = NITF99Tab:Section({
+    Title = "99 night in the forest KEY AND NO KEY",
+    Icon = "",
+    Opened = true,
+}) 
+
+-- VOIDWARE SCRIPT ADDED!!! 
+scriptsSection:Button({
+   Title = "VoidWare (NO KEY!)", 
+   Desc = "Execute And Have Fun", 
+   Locked = false, 
    Callback = function() 
-        loadstring(game:HttpGet("https://get.nathub.xyz/loader"))()
+      loadstring(game:HttpGet("https://raw.githubusercontent.com/VapeVoidware/VW-Add/main/nightsintheforest.lua", true))()
    end
-}) 
-OtherTab:CreateButton({
-    Name = "😎Tora Isme", 
-    Callback = function() 
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/Dandy"))()
-  end
-}) 
-OtherTab:CreateButton({
-   Name = "🥶Redz Hub", 
-   Callback = function() 
-local Settings = {
-    JoinTeam = "Pirates"; -- Pirates / Marines
-    Translator = true;   -- true / false
-}
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/tlredz/Scripts/refs/heads/main/main.luau"))(Settings)
-  end
 })
-OtherTab:CreateButton({
-    Name = "🤖 No lag Hub", 
-    Callback = function() 
-      loadstring(game:HttpGet("https://raw.githubusercontent.com/NoLag-id/No-Lag-HUB/refs/heads/main/Loader/Main.lua"))()
-  end
- }) 
-OtherTab:CreateButton({
-    Name = "⚡Speed Hub", 
-    Callback = function() 
-      loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua", true))()
+
+-- BONK HUB (NORMAL) ADDED!! 
+scriptsSection:Button({
+   Title = "Bonk Hub (No Key!)",
+   Desc = "Execute And Have Fun!", 
+   Locked = false, 
+   Callback = function()
+     loadstring(game:HttpGet("https://bonkhub.online/loader.lua",true))()
   end
 }) 
-OtherTab:CreateButton({
-   Name = "❌ H4X", 
-   Callback = function() 
+
+-- BONK HUB (DIAMOND FARM) ADDED!!! 
+scriptsSection:Button({
+  Title = " Bonk Hub (DIAMOND FARM) ", 
+  Desc = "Execute And Have Fun!", 
+  Locked = false, 
+  Callback = function() 
+    getgenv().ScriptMode = "Kaitan"
+    loadstring(game:HttpGet("https://bonkhub.online/loader.lua",true))()
+ end
+}) 
+
+-- H4X HUB (Best top) 
+scriptsSection:Button({
+  Title = "H4X (KEY)", 
+  Desc = "Execute Take The Key And Have Fun!", 
+  Locked = false, 
+  Callback = function() 
     loadstring(game:HttpGet("https://raw.githubusercontent.com/H4xScripts/Loader/refs/heads/main/loader.lua", true))()
  end
 }) 
--- HTTSW Tab
-local HTTSWTab = Window:CreateTab("HTTSW", 4483362458)
-HTTSWTab:CreateParagraph({
-   Title = "How To That's Script Work?", 
-   Content = "Well Script It can only be executed in certain games XD"
+
+------------------------------------------
+-- GROW A GARDEN TAB
+-------------------------------------------
+local gagTab = Window:Tab({
+  Title = "GROW A GARDEN SCRIPT", 
+  Icon = "bone", 
+  Locked = false, 
 }) 
--- Supported Game Tab
-local SupportedTab = Window:CreateTab("Supported Game", 4483362458) 
-SupportedTab:CreateParagraph({
-   Title = "Omg Hub",
-   Content = "• Fruit Seas • Anime Mania • Z Piece • FitPiece • SecondPiece • DungeonHeroes •CatPiece • Steal A Brainrot • Anime Last Stand • All Star Tower Defense X • Cat Piece • Grow A Garden • Sorcerer Battle • Anime Rails • Meme Sea • Rock Fruit • Blox Fruit • One Fruit Simulator • Blue Lock Rivals • King Legacy • Verse Piece • Arcane Piece • BubbleGum Simulator Infinity"
+
+local scriptsSection = gagTab:Section({
+ Title = "GROW A GARDEN SCRIPT KEY AND NO KEY", 
+ Icon = "", 
+ Opened = true, 
 }) 
-SupportedTab:CreateParagraph({
-  Title = "Rips Hub", 
-  Content = "• Become A Plane And Fly • Horse Race • GEF • Glass Bridge • 1.000.000 Glass Bridge • Sandwich Restaurant Tycoon • Pizzeria Tycoon • Burgeria Tycoon • My Little Pony Tycoon • Mega  Princess Tycoon • Youtuber Tycoon • Sell Water To Rule The Worlds • Reborn As Swordsman • Merge Simulator • Merge Toy • Squid Game • Squid Game 2 • Squid Game X • Squid Game Season 2 • Mingle • Shrimp Game • Red Light Green Light • Light Game • Squid Project"
+
+-- SPEED HUB (KEY) 
+scriptsSection:Button({
+ Title = "SPEED HUB (KEY)", 
+ Desc = " Execute Take The Key And Have Fun!", 
+ Locked = false, 
+ Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua", true))()
+end
 }) 
-SupportedTab:CreateParagraph({
- Title = "Nat Hub", 
- Content = "• Fisch (Well It's Need Update) • Grow A Garden • Steal A Brainrot • Blue Lock • Blade Ball • Blox Fruit • Dead Rails • Attack On Titan Revolution • Forsaken • 99 Night In The Forest"
- }) 
-SupportedTab:CreateParagraph({
- Title = "Tora Isme", 
-  Content = "It's Only Dandy World And That's needed Key"
- }) 
- SupportedTab:CreateParagraph({
- Title = "No Lag Hub", 
-  Content = "• Grow A Garden • 99 Night In The Forest"
+
+-- NAT HUB (KEY)
+scriptsSection:Button({
+ Title = "NAT HUB (KEY)", 
+ Desc = "Execute Take The Key And Have Fun!", 
+ Locked = false, 
+ Callback = function() 
+   loadstring(game:HttpGet("https://get.nathub.xyz/loader"))()
+ end
+})  
+
+-- THAN HUB (NO KEY?) 
+scriptsSection:Button({
+ Title = "THAN HUB (NO KEY)", 
+ Desc = "Execute And Have Fun!", 
+ Locked = false, 
+ Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/thantzy/thanhub/refs/heads/main/thanv1"))()
+ end
 }) 
- SupportedTab:CreateParagraph({
- Title = "Speed Hub", 
-  Content = "• The Strongest Battleground • Grow A Garden • 99 Night In The Forest • Pets Go • Muscle Legend • Dig • Ink Game • Blox Fruit (Need Update But Still Working) • Fisch (Same As Blox Fruit)"
+
+-- LUMIN HUB (KEY) 
+scriptsSection:Button({
+ Title = "LUMIN HUB (KEY)", 
+ Desc = "Execute Take The Key And  Have Fun!", 
+ Locked = false, 
+ Callback = function() 
+   loadstring(game:HttpGet("https://lumin-hub.lol/loader.lua",true))()
+ end
 })
- SupportedTab:CreateParagraph({
- Title =  "H4X Script", 
-  Content = "• Grow A Garden (Need Update But Still Working) • 99 Night In The Forest (BEST EVER I SEEN) • Brainrot Evolution • Catch And Feed A Brainrot • Dungeon Heroes •Dig To Earth Core • FRONTLINE •  Find The Aura • Kamekameha Simulator • Raise A Farm • Merge For Diamond"
+
+--------------------------------------
+-- DANDY WORLD TAB
+--------------------------------------
+local dwTab = Window:Tab({
+ Title = "DANDY WORLD SCRIPT", 
+ Icon = "paw-print", 
+ Locked = false, 
 }) 
-SupportedTab:CreateParagraph({
- Title = "Why My Loadstring Before Not Work? ", 
- Content = "Totally My Pastebin Account Before Is Gone Idk Why 💔"
+
+local scriptsSection = dwTab:Section({
+ Title = "DANDY WORLD SCRIPT NO KEY AND KEY", 
+ Icon = "", 
+ Opened = true, 
+}) 
+
+-- TORA IS ME (KEY) 
+scriptsSection:Button({
+ Title = "Tora Is Me (Key)", 
+ Desc = "Execute Take The Key And Have Fun", 
+ Locked = false, 
+ Callback = function()
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/Dandy"))()
+ end
+}) 
+
+-- RIDDANCE HUB (KEY) 
+scriptsSection:Button({
+ Title = "Riddance Hub (KEY)",
+ Desc = "Execute Take The Key And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+   loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/02e4cd078ceb658b20c4074e697bc549.lua"))()
+ end
+}) 
+
+-- HEX HUB (NO KEY) 
+scriptsSection:Button({
+ Title = "HEX HUB outdated (NO KEY)", 
+ Desc = "Execute And Have Fun!", 
+ Locked = false, 
+ Callback = function() 
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/randomaccve/dandy-world/main/hex%20hub"))()
+ end
+})
+
+-- G0bbyD0llan57 (No Key) 
+scriptsSection:Button({
+ Title = "G0bbyD0llan57 Hub (NO KEY)", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+   loadstring(game:HttpGet("https://pastebin.com/raw/FBRnb7S7"))()
+end
+}) 
+
+------------------------------------------
+-- BROOKHAVEN SCRIPT
+------------------------------------------
+local BrookhavenTab = Window:Tab({
+ Title = "BROOKHAVEN SCRIPT", 
+ Icon = "banana",
+ Locked = false, 
+}) 
+
+local scriptsSection = BrookhavenTab:Section({
+ Title = "BROOKHAVEN SCRIPT KEY AND NO KEY", 
+ Icon = "",
+ Opened = true, 
+}) 
+
+-- Kit Kat (No Key) 
+scriptsSection:Button({
+ Title = "Kit Kat (Alien Words)",
+ Desc = "No Key Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/BazukaLindaoo/KitK4t-Hub/refs/heads/main/README.md"))()
+end
+}) 
+
+-- FHub (No Key) 
+scriptsSection:Button({
+ Title = "FHub (No Key)", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/OpenSourceEngine/Script/refs/heads/main/Brookhaven.lua"))()
+ end
+}) 
+
+-----------------------------------------------------------
+-- DON'T WAKE UP THE BRAINROT
+-----------------------------------------------------------
+local DWUTBTab = Window:Tab({
+ Title = "DON'T WAKE UP THE BRAINROT", 
+ Icon = "bird", 
+ Locked = false, 
+}) 
+
+local scriptsSection = DWUTBTab:Section({
+ Title = "DON'T WAKE UP THE BRAINROT NO KEY", 
+ Icon = "",
+ Opened = true, 
+}) 
+
+-- VylikGylik Script
+scriptsSection:Button({
+ Title = "VylikGylik Script NO KEY", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/VylikGylik/Script/refs/heads/main/Don't%20Wake%20the%20Brainrots"))()
+ end
+}) 
+
+-- ToraIsMe Script
+scriptsSection:Button({
+ Title = "ToraIsMe script", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/DontWaketheBrainrots"))()
+ end
+}) 
+
+-------------------------------------
+-- STEAL A BRAINROT
+-------------------------------------
+local SabTab = Window:Tab({
+ Title = "STEAL A BRAINROT", 
+ Icon = "armchair", 
+ Locked = false, 
+}) 
+
+local scriptsSection = SabTab:Section({
+ Title = "STEAL A BRAINROT NO KEY AND KEY", 
+ Icon = "",
+ Opened = true, 
+}) 
+
+-- CHILI HUB
+scriptsSection:Button({
+ Title = "Chili Hub (No key)", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"))()
+ end
+})
+
+ -- PULSAR X HUB
+scriptsSection:Button({
+ Title = "PULSAR X HUB", 
+ Desc = "Execute And Have Fun!", 
+ Locked = false, 
+ Callback = function() 
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/Estevansit0/KJJK/refs/heads/main/PusarX-loader.lua"))()
+ end
+}) 
+ 
+-- AV HUB 
+scriptsSection:Button({
+ Title = "AV HUB", 
+ Desc = "Execute And Have Fun!",
+ Locked = false, 
+ Callback = function() 
+   loadstring(game:HttpGet("https://get-avth-ontop.netlify.app/my-paste/script.lua"))()
+ end
+})
+-------------------------
+-- BLOX FRUIT 
+-------------------------
+local BFTab = Window:Tab({
+ Title = "BLOX FRUIT SCRIPT", 
+ Icon = "bow-arrow", 
+ Locked = false, 
+}) 
+
+local scriptsSection = BFTab:Section({
+ Title = "BLOX FRUIT NO KEY AND KEY", 
+ Icon = "",
+ Opened = true, 
+})
+
+ -- HOHO HUB
+scriptsSection:Button({
+ Title = "HOHO HUB", 
+ Desc = "Execute Take The Key And Have Fun!",
+ Locked = false, 
+ Callback = function() 
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/acsu123/HOHO_H/main/Loading_UI"))()
+ end
+})
+
+-- DAT THG
+scriptsSection:Button({
+ Title = "DAT THG (NO KEY)", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/LuaCrack/DatThg/refs/heads/main/DatThgV2"))()
+ end
+}) 
+
+-- BLUE X
+scriptsSection:Button({
+ Title = "BLUE X (NO KEY)", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/Dev-BlueX/BlueX-Hub/refs/heads/main/Main.lua"))()
+ end
+}) 
+
+-- OMG HUB
+scriptsSection:Button({
+ Title = "OMG HUB (KEY)", 
+ Desc = "Execute Take The Key Have Fun", 
+ Locked = false, 
+ Callback = function() 
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/Omgshit/Scripts/main/MainLoader.lua"))()
+ end
+}) 
+
+-- ALCHEMY HUB
+scriptsSection:Button({
+ Title = "ALCHEMY HUB (KEY)", 
+ Desc = "Execute Take The Key Have Fun", 
+ Locked = false, 
+ Callback = function() 
+   loadstring(game:HttpGet("https://scripts.alchemyhub.xyz"))()
+ end
+}) 
+
+-- QUANTUM HUB
+scriptsSection:Button({
+ Title = "QUANTUM HUB (NO KEY)", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/flazhy/QuantumOnyx/refs/heads/main/QuantumOnyx.lua"))()
+ end
+}) 
+
+------------------------------
+-- KAYAK RACING
+------------------------------
+
+local KRTab = Window:Tab({
+ Title = "KAYAK RACING", 
+ Icon = "wind", 
+ Locked = false, 
+}) 
+
+local scriptsSection = KRTab:Section({
+ Title = "KAYAK RACING SCRIPT NO KEY", 
+ Icon = "",
+ Opened = true, 
+})
+
+-- TORA IS ME 
+scriptsSection:Button({
+ Title = "TORA IS ME (NO KEY)", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+   --[[
+	WARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!
+]]
+loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/KayakRacing"))()
+ end
+})
+
+-- CELESTIAL HUB
+scriptsSection:Button({
+ Title = "CELESTIAL HUB (NO KEY)", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/MajestySkie/list/refs/heads/main/games"))()
+ end
+}) 
+
+------------------------------------------------
+-- PETA PETA LVL 6 SCRIPT
+------------------------------------------------
+
+local PPLVL6Tab = Window:Tab({
+ Title = "PETA PETA LVL 6 SCRIPT", 
+ Icon = "axe", 
+ Locked = false, 
+}) 
+
+local scriptsSection = PPLVL6Tab:Section({
+ Title = "PETA PETA LVL 6 SCRIPT", 
+ Icon = "",
+ Opened = true, 
+})
+
+-- KAK HUB
+scriptsSection:Button({
+ Title = "KAK HUB (NO KEY)", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+    loadstring(game:HttpGet("https://pastebin.com/raw/L0smJ0Yq"))()
+ end
+}) 
+
+-- RENREN HUB
+scriptsSection:Button({
+ Title = "RENREN HUB (KEY)", 
+ Desc = "Execute Take The Key Have Fun", 
+ Locked = false, 
+ Callback = function() 
+   loadstring(game:HttpGet("https://raw.githubusercontent.com/rendays666/petapea/refs/heads/main/ytrendays.txt"))()
+ end
+}) 
+
+--------------------------
+-- BLADE BALL 
+--------------------------
+
+local BladeBallTab = Window:Tab({
+ Title = "BLADE BALL", 
+ Icon = "loader-pinwheel", 
+ Locked = false, 
+}) 
+
+local scriptsSection = BladeBallTab:Section({
+ Title = "BLADE BALL SCRIPT", 
+ Icon = "",
+ Opened = true, 
+})
+
+-- OBVILION X 
+scriptsSection:Button({
+ Title = "OBLIVION X (NO KEY)", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+    loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/7519e2ceeda768eda3340010190ab2e9.lua"))()
+ end
+}) 
+
+-- KALITOR
+scriptsSection:Button({
+ Title = "KALITOR(NO KEY)", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/redopy7/Blade-Ball/refs/heads/main/Kalitor"))()
+ end
+}) 
+
+-----------------------------
+-- EVADE SCRIPT
+-----------------------------
+
+local EvadeTab = Window:Tab({
+ Title = "EVADE", 
+ Icon = "beer", 
+ Locked = false, 
+})
+
+local scriptsSection = EvadeTab:Section({
+ Title = "EVADE SCRIPT", 
+ Icon = "",
+ Opened = true, 
+})
+
+-- Iliankytb
+scriptsSection:Button({
+ Title = "Iliankytb (NO KEY)", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Iliankytb/Iliankytb/main/NewbestEvadeCheat"))()
+ end
+}) 
+
+-- SATURN HUB
+scriptsSection:Button({
+ Title = "SATURN HUB", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+    loadstring(game:HttpGet("https://pastebin.com/raw/PY70SKrt"))()
+ end
+}) 
+
+-- EVADE
+scriptsSection:Button({
+ Title = "EVADE", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+    -- settings
+getgenv().farmTickets = true -- maybe works
+getgenv().farmRevives = false
+getgenv().noRender = false
+getgenv().TrackMePlease = true -- optional tracking
+
+loadstring(game:HttpGet('https://raw.githubusercontent.com/LabyCatUser/rawr/refs/heads/main/evade.lua'))()
+ end
+}) 
+
+-----------------------------
+-- PROSPECTING
+-----------------------------
+
+local ProsPectingTab = Window:Tab({
+ Title = "PROSPRECTING", 
+ Icon = "superscript", 
+ Locked = false, 
+})
+
+local scriptsSection = ProsPectingTab:Section({
+ Title = "PROSPECTING SCRIPT", 
+ Icon = "",
+ Opened = true, 
+})
+
+-- TORAISME
+scriptsSection:Button({
+ Title = "TORAISME (NO KEY)", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/Prospecting"))()
+ end
+}) 
+
+--------------------------------------------------------------
+-- BRAINROT EVOLUTION OR SMTH
+--------------------------------------------------------------
+
+local BEVOLUTIONTab = Window:Tab({
+ Title = "BRAINROT EVOLUTION", 
+ Icon = "bluetooth-off", 
+ Locked = false, 
+})
+
+local scriptsSection = BEVOLUTIONTab:Section({
+ Title = "BRAINROT EVOLUTION SCRIPT", 
+ Icon = "",
+ Opened = true, 
+})
+
+-- TORA IS ME
+scriptsSection:Button({
+ Title = "TORA IS ME (NO KEY)", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/BrainrotEvolution"))() 
+ end
+}) 
+
+local aboutSection = BEVOLUTIONTab:Section({ 
+    Title = "?",
+    TextXAlignment = "Left",
+    TextSize = 17,
+})
+aboutSection:Paragraph({
+    Title = "THIS SCRIPT TOTALLY ON BETA CUSE I MADE IT ALONE NO WORKER JUST ALONE CODING ALL AND GET TIRED",
+    Description = "MAYBE I WILL LOCK IN AND GET MORE SCRIPT :>",
+    Color = "White",
+    Image = "",
+    ImageSize = 30,
+    Locked = false,
+    Buttons = {
+        {
+            Icon = "",
+            Title = "DON'T CLICK",
+            Callback = function() print("dang i said don't click :>") end,
+        }
+    }
+})
+
+local scriptsSection = BEVOLUTIONTab:Section({
+ Title = "BRAINROT ZOMBIE EVOLUTION SCRIPT", 
+ Icon = "",
+ Opened = true, 
+})
+
+-- TORA IS ME
+scriptsSection:Button({
+ Title = "TORA IS ME (AGAIN) (NO KEY)", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/gumanba/Scripts/main/BrainrotZombie"))()
+ end
+}) 
+
+-----------------------------------
+-- RAINBOW FRIEND
+-----------------------------------
+
+local RFTab = Window:Tab({
+ Title = "RAINBOW FRIEND", 
+ Icon = "egg-fried", 
+ Locked = false, 
+})
+
+local scriptsSection = RFTab:Section({
+ Title = "RAINBOW FRIEND SCRIPT chapter 2!", 
+ Icon = "",
+ Opened = true, 
+})
+
+-- lliankytb
+scriptsSection:Button({
+ Title = "lliankytb (NO KEY)", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Iliankytb/Iliankytb/main/BestRainbowFriendsTwo"))()
+ end
+}) 
+
+-----------------------------------
+-- MM2
+-----------------------------------
+
+local MM2Tab = Window:Tab({
+ Title = "MURDER MYSTERY 2", 
+ Icon = "utensils-crossed", 
+ Locked = false, 
+})
+
+local scriptsSection = MM2Tab:Section({
+ Title = "MURDER MYSTERY 2 SCRIPT", 
+ Icon = "",
+ Opened = true, 
+})
+
+-- x hub
+scriptsSection:Button({
+ Title = "X HUB", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/wave-code-top/xhub/refs/heads/main/xhub.lua", true))()
+ end
+}) 
+
+-- Ploy Sc
+scriptsSection:Button({
+ Title = "PLOY SCRIPT", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ploynew/MM2/refs/heads/main/PloyHub"))()
+ end
+})
+
+-- Vertex
+scriptsSection:Button({
+ Title = "VERTEX", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/vertex-peak/vertex/refs/heads/main/loadstring"))()
+ end
+})
+--------------------------------------------------------------
+-- Random
+--------------------------------------------------------------
+
+local RSTab = Window:Tab({
+ Title = "Random Script", 
+ Icon = "component", 
+ Locked = false, 
+})
+
+local scriptsSection = RSTab:Section({
+ Title = "RANDOM SCRIPT", 
+ Icon = "",
+ Opened = true, 
+})
+
+-- Random? 
+scriptsSection:Button({
+ Title = "GHOST HUB", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GhostPlayer352/Test4/main/GhostHub"))()
+ end
+}) 
+
+-- Random? 
+scriptsSection:Button({
+ Title = "COOLGUI", 
+ Desc = "Execute And Have Fun", 
+ Locked = false, 
+ Callback = function() 
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/cfsmi2/c00lguiv1/refs/heads/main/Main.lua", true))()
+ end
 }) 
