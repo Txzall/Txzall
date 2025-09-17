@@ -7,9 +7,9 @@
  local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
 local Window = WindUI:CreateWindow({
-    Title = "OPEN GUI",
+    Title = "All In One | :>",
     Icon = "hamburger",
-    Author = "by Txzall/zall I MADE IT ALONE NOO",
+    Author = "by maskotxd_ I MADE IT ALONE NOO",
     Folder = "Txzall",
     
     Size = UDim2.fromOffset(545,430),
@@ -34,7 +34,7 @@ local Window = WindUI:CreateWindow({
             Image = "rbxassetid://90747673963553",
             Title = "WELCOME!",
         },
-        URL = "",
+        URL = "JAMAL",
         SaveKey = true,
     },
 })
@@ -844,7 +844,7 @@ scriptsSection:Button({
 --------------------------------------------------------------
 
 local RSTab = Window:Tab({
- Title = "Random Script", 
+ Title = "RANDOM SCRIPT", 
  Icon = "component", 
  Locked = false, 
 })
